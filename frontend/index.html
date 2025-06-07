@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CoinForge Meme Generator</title>
+</head>
+<body style="background-color:#111;color:white;text-align:center;">
+  <h1>AI Meme Generator</h1>
+  <input id="prompt" placeholder="Describe your meme" />
+  <button onclick="generateMeme()">Generate</button>
+  <p id="status"></p>
+  <img id="result" style="max-width:100%;" />
+
+  <script>
+    async function generateMeme() {
+      document.getElementById('status').innerText = 'Generating...';
+      const prompt = document.getElementById('prompt').value;
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+      if(data.output) {
+        document.getElementById('result').src = data.output[0];
+        document.getElementById('status').innerText = '';
+      } else {
+        document.getElementById('status').innerText = 'Error generating meme.';
+      }
+    }
+  </script>
+</body>
+</html>
